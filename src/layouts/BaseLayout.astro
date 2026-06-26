@@ -7,11 +7,53 @@ import { site } from '../data/site';
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
 }
 
-const { title, description = site.description } = Astro.props;
+const {
+  title,
+  description = site.description,
+  image = '/images/banner-home.png',
+  type = 'website',
+  noindex = false,
+} = Astro.props;
+
 const pageTitle = title ? `${title} — ${site.name}` : site.fullName;
-const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://reach-children-uganda.org.uk').href;
+const siteUrl = Astro.site ?? new URL('https://reach-children-uganda.org.uk');
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const ogImage = new URL(image, siteUrl).href;
+
+// Sitewide Organization (charity) structured data for search engines.
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'NGO',
+  name: site.fullName,
+  alternateName: 'R.E.A.CH',
+  url: siteUrl.href,
+  logo: new URL(site.logo, siteUrl).href,
+  image: ogImage,
+  description: site.description,
+  email: site.email,
+  foundingDate: '1992',
+  sameAs: [site.facebook],
+  identifier: {
+    '@type': 'PropertyValue',
+    name: 'UK Registered Charity Number',
+    value: site.charityNumber,
+  },
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '70 Glossop Road, Marple Bridge',
+    addressLocality: 'Stockport',
+    addressRegion: 'Greater Manchester',
+    postalCode: 'SK6 5EL',
+    addressCountry: 'GB',
+  },
+  areaServed: { '@type': 'Country', name: 'Uganda' },
+  knowsAbout: ['Education', 'Child welfare', 'Poverty relief', 'Uganda'],
+};
 ---
 
 <!doctype html>
@@ -21,10 +63,24 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://reach-child
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
     <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content={site.fullName} />
+    <meta property="og:locale" content="en_GB" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
     <meta name="theme-color" content="#bd4a10" />
     <link rel="icon" type="image/png" href="/images/cropped-thumbnail_Reach-Logo-Final-transparent-no-text.png" />
     <link rel="apple-touch-icon" href="/images/cropped-thumbnail_Reach-Logo-Final-transparent-no-text.png" />
@@ -34,6 +90,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://reach-child
       href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
   </head>
   <body class="flex min-h-screen flex-col">
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:shadow">Skip to content</a>

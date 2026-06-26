@@ -1,0 +1,39 @@
+name: Nightly backup to repo-backup
+
+# Mirrors this repository (reach-prod) into chrisdemetriouaudio/repo-backup every night.
+# `git push --mirror` only sends new objects, so each run is incremental.
+#
+# Requires a repository secret named BACKUP_TOKEN — a Personal Access Token with
+# write (Contents) access to the repo-backup repository (and read of this one if private).
+
+on:
+  schedule:
+    # 02:27 UTC every night. GitHub runs schedules in UTC and may delay them
+    # by a few minutes at busy times — that's normal.
+    - cron: '27 2 * * *'
+  workflow_dispatch: {}   # lets you run it on demand from the Actions tab
+
+# Avoid two backups overlapping if one runs long.
+concurrency:
+  group: nightly-backup
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror reach-prod -> repo-backup
+        env:
+          TOKEN: ${{ secrets.BACKUP_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${TOKEN}" ]; then
+            echo "::error::BACKUP_TOKEN secret is not set."
+            exit 1
+          fi
+          echo "Cloning a full mirror of reach-prod (all branches, tags, history)..."
+          git clone --mirror "https://x-access-token:${TOKEN}@github.com/chrisdemetriouaudio/reach-prod.git" repo.git
+          cd repo.git
+          echo "Pushing mirror to repo-backup..."
+          git push --mirror "https://x-access-token:${TOKEN}@github.com/chrisdemetriouaudio/repo-backup.git"
+          echo "Backup complete: $(date -u) UTC"
