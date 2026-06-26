@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+
+const commitments = [
+  'Children and young people are listened to, valued and respected.',
+  'Vulnerable adults are treated with care and respect.',
+  'Staff at the projects we support are aware of the need to be alert to the signs of abuse and know what to do with their concerns.',
+  'If anyone goes to one of the schools from the UK on behalf of R.E.A.CH, we will ensure references are obtained and they are aware of the child protection policies within that particular school.',
+];
+---
+
+<BaseLayout title="Safeguarding" description="R.E.A.CH recognises its responsibility to safeguard and promote the welfare of children within the legal framework of the Children Act 1989 and 2004.">
+  <PageHeader eyebrow="About R.E.A.CH" title="Safeguarding Statement" />
+
+  <article class="container-reach py-16">
+    <div class="prose-reach max-w-3xl">
+      <p>
+        R.E.A.CH (Reaching East Africa's Children) recognises its responsibility to safeguard and
+        promote the welfare of children within the legal framework of the Children Act 1989 and 2004.
+        The children we support are protected under the United Nations Convention on the Rights of the
+        Child and the legislation within their own country.
+      </p>
+      <p>
+        R.E.A.CH is also aware that children, young people and vulnerable adults can be the victims of
+        different kinds of abuse, and that we all have a responsibility to safeguard against this
+        happening.
+      </p>
+      <p>
+        R.E.A.CH works in the UK as a registered charity and has no day-to-day direct contact with the
+        children we support in Uganda. However, we do endeavour to make sure our partners in East
+        Africa are aware of our responsibility (and their responsibility), and this is clearly
+        demonstrated by the information within this statement.
+      </p>
+      <p>We will endeavour by our work to make clear that:</p>
+      <ul>
+        {commitments.map((c) => <li>{c}</li>)}
+      </ul>
+      <p>
+        R.E.A.CH is committed to making sure the children we support are as safe as possible. During
+        the COVID-19 pandemic the charity was alerted to the fact that children had gone hungry and
+        responded very quickly to send money for food.
+      </p>
+      <p>
+        R.E.A.CH's main role is to raise funds to support the education and care of vulnerable
+        children. This is done either by sending funds directly to trusted advisors, or by funding the
+        initiation and development of small, self-sustaining community projects which will in time
+        raise funds to support children within the community.
+      </p>
+    </div>
+  </article>
+</BaseLayout>

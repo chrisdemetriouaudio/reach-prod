@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+
+const faqs = [
+  { q: 'How much does it cost to send a child to school?', a: "Costs vary depending on the child's age — the older they get, the more expensive it becomes. As an example, £12.50 will pay for a primary school child to attend school for a month." },
+  { q: 'Does the charity pay wages?', a: 'No. No one involved with the charity takes a wage or claims expenses.' },
+  { q: 'How much does R.E.A.CH raise on average?', a: 'We aim to raise between £8,000 and £10,000 each year.' },
+  { q: "Why 'Reaching East Africa's Children'?", a: "The charity was originally started in Bury, Lancashire and began life as 'Bury African Outreach' back in 1992. Many of our regular donors still live in the area. However, the current trustees no longer live in Bury, so in 2023 the name was changed to R.E.A.CH as we felt this would allow us to run the charity more effectively. We now have donors across the UK and beyond." },
+  { q: 'Where does all the money come from?', a: 'Approximately 70% comes via monthly direct debits and the rest comes from fundraising events.' },
+  { q: 'Is Uganda safe?', a: 'Yes. The country is rebuilding itself after years of civil unrest and is now beginning to thrive as a popular tourist destination. Many tourists visit Uganda to see the endangered mountain gorillas.' },
+  { q: 'Can I go?', a: 'Yes — please do. You are welcome to visit our projects and meet the trusted advisors. Please contact us for travel tips.' },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<BaseLayout title="Frequently Asked Questions" description="Answers to the questions we are asked most often about R.E.A.CH, our work in Uganda and how donations are used.">
+  <PageHeader eyebrow="About R.E.A.CH" title="Frequently Asked Questions" />
+
+  <section class="container-reach py-16">
+    <div class="mx-auto max-w-3xl space-y-3">
+      {faqs.map((f) => (
+        <details class="group rounded-2xl border border-sand-200 bg-white p-5 open:shadow-sm">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-ink-900">
+            {f.q}
+            <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-accent-50 text-accent-700 transition group-open:rotate-45">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 2v10M2 7h10" stroke-linecap="round"/></svg>
+            </span>
+          </summary>
+          <p class="mt-3 leading-relaxed text-ink-700">{f.a}</p>
+        </details>
+      ))}
+    </div>
+
+    <div class="mx-auto mt-10 max-w-3xl rounded-2xl bg-accent-50 p-6 text-center">
+      <p class="text-ink-700">Still have a question?</p>
+      <a href="/contact-us" class="btn-primary mt-3">Get in touch</a>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+</BaseLayout>

@@ -1,0 +1,24 @@
+---
+// Renders an <img> that gracefully falls back to a branded placeholder
+// if the source file is missing (e.g. before images have been copied in).
+interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+}
+const { src, alt, width, height, class: className = '', loading = 'lazy' } = Astro.props;
+const placeholder = '/images/placeholder.svg';
+---
+<img
+  src={src}
+  alt={alt}
+  width={width}
+  height={height}
+  loading={loading}
+  decoding="async"
+  class={className}
+  onerror={`this.onerror=null;this.src='${placeholder}';this.classList.add('img-fallback');`}
+/>

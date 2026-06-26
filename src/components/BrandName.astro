@@ -1,0 +1,10 @@
+---
+// Renders "Reaching East Africa's CHildren" with the letters that spell
+// R.E.A.CH (R, E, A, CH) highlighted, so the acronym reads out of the name.
+interface Props {
+  class?: string;
+  highlightClass?: string;
+}
+const { class: className = '', highlightClass = 'text-accent-600' } = Astro.props;
+---
+<span class={className}><span class={highlightClass}>R</span>eaching <span class={highlightClass}>E</span>ast <span class={highlightClass}>A</span>frica&rsquo;s <span class={highlightClass}>CH</span>ildren</span>

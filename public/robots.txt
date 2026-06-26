@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://reach-children-uganda.org.uk/sitemap.xml

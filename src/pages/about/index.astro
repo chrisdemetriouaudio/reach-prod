@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+
+const steps = [
+  {
+    title: 'We raise funds in the UK',
+    body: 'Funds are raised in the UK via regular sponsors and one-off fundraising events. We are proud of our minimal overheads and publish details of all the charity costs so donors can be reassured their money is spent in the most effective way.',
+  },
+  {
+    title: 'We work through Trusted Representatives',
+    body: 'We operate through Trusted Representatives in Uganda who identify the need and manage the projects on our behalf. No one involved with the charity takes a wage or claims expenses.',
+  },
+  {
+    title: 'We invest in education and sustainability',
+    body: 'Our primary focus is education, but we also fund a number of small projects which we hope will become self-sustaining — investing in skills for vulnerable families so they can work towards lifting themselves out of poverty.',
+  },
+];
+
+const links = [
+  { href: '/about/the-history', label: 'The History', text: 'How R.E.A.CH grew from Bury African Outreach, founded in 1992.' },
+  { href: '/trustees', label: 'Our Trustees', text: 'Meet the volunteer team who run the charity.' },
+  { href: '/representatives', label: 'Our Trusted Representatives', text: 'The advisors who manage our projects in Uganda.' },
+  { href: '/faq', label: 'Frequently Asked Questions', text: 'Answers to the questions we are asked most often.' },
+  { href: '/about/safeguarding', label: 'Safeguarding', text: 'Our commitment to keeping children safe.' },
+];
+---
+
+<BaseLayout title="About" description="How R.E.A.CH works — raising funds in the UK and working through Trusted Representatives in Uganda to educate and care for vulnerable children.">
+  <PageHeader
+    eyebrow="About R.E.A.CH"
+    title="How R.E.A.CH works"
+    lead="R.E.A.CH helps to educate and care for vulnerable children in Uganda. We believe all children should have a childhood — and that education is no weight to carry."
+  />
+
+  <section class="container-reach py-16">
+    <div class="prose-reach max-w-3xl">
+      <p>
+        R.E.A.CH (Reaching East Africa's Children) helps to educate and care for vulnerable children
+        in Uganda. Our philosophy is that all children should have a childhood and that 'education is
+        no weight to carry.' Our main role is to raise funds to support the education and care of
+        vulnerable children. This is done either by sending funds directly to trusted advisors, or by
+        funding the initiation and development of small, self-sustaining community projects which will
+        in time raise funds to support children within their own community.
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-6 md:grid-cols-3">
+      {steps.map((s, i) => (
+        <div class="rounded-3xl border border-sand-200 bg-white p-7">
+          <span class="grid h-10 w-10 place-items-center rounded-full bg-accent-50 font-display text-lg font-bold text-accent-700">{i + 1}</span>
+          <h2 class="mt-4 text-lg font-semibold">{s.title}</h2>
+          <p class="mt-2 text-sm leading-relaxed text-ink-600">{s.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="border-t border-sand-200 bg-white">
+    <div class="container-reach py-16">
+      <h2 class="text-2xl font-semibold sm:text-3xl">Find out more</h2>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {links.map((l) => (
+          <a href={l.href} class="group rounded-2xl border border-sand-200 bg-sand-50 p-6 hover-lift hover:border-accent-300">
+            <h3 class="font-semibold group-hover:text-accent-700">{l.label}</h3>
+            <p class="mt-2 text-sm text-ink-600">{l.text}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

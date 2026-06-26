@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Img from '../components/Img.astro';
+
+const trustees = [
+  {
+    name: 'Lydia Turner',
+    role: 'Chairperson',
+    image: '/images/trustee-lydia.png',
+    bio: "Hi, I'm Lydia. I grew up in Bury and took over as Chairperson of R.E.A.CH (formerly Bury African Outreach) back in 2012. My family had been supporting the charity for many years, and in 2010 I was lucky enough to visit Uganda with my husband (Trustee Tom) and saw the amazing work being done there. I returned with a passion for East Africa and wanted to do what I could to make a difference to the lives of vulnerable children. The existing trustees at that time were planning for retirement, so we arranged a transfer of responsibilities upon our return — and the rest is history! We returned to Uganda in 2013 and hope to go back in the near future. I have an MSc in Clinical Research and work in pharmaceuticals, managing clinical trials. I live in Stockport with Tom and our two young boys.",
+  },
+  {
+    name: 'Phil Lay',
+    role: 'Treasurer',
+    image: '/images/trustee-phil.png',
+    bio: "Hi, my name is Phil. I have had the pleasure of being treasurer for R.E.A.CH (formerly Bury African Outreach) since 2012. I met Tom and Lydia through my wife, who has been best friends with Lydia since childhood. As an associate accountant I was more than happy to lend my skills to help such a worthwhile cause. The stories I hear about how the money raised by R.E.A.CH is helping both children and adults in Uganda make me feel proud to be one of the charity's trustees. I hope to be part of the charity for years to come and to continue to help raise funds for some of the most vulnerable people in Uganda.",
+  },
+  {
+    name: 'Tom Turner',
+    role: 'Secretary',
+    image: '/images/trustee-tom.png',
+    bio: "Hi, I'm Tom and I'm R.E.A.CH secretary. I live in Stockport with R.E.A.CH Chair Lydia and I run a construction company. I'm originally from Worcestershire but moved to the North West to study for a degree 20 years ago. My interest in East Africa began back in 2009 when I met an interesting man with a gorilla tattoo! He inspired me to visit Uganda in 2010, and I was lucky enough to see these beautiful creatures in the wild. Whilst on this trip we visited some of the projects being supported by the charity, and when the opportunity to take over its management came up, I jumped at the chance to get involved and make a difference.",
+  },
+  {
+    name: 'Denise Ead',
+    role: 'Trustee',
+    image: '/images/trustee-denise.png',
+    bio: "Denise was a Trustee of Helping Uganda Schools for over 20 years and has visited Uganda on several occasions. She is a great support to R.E.A.CH and is known for 'making things happen'; her experience from HUGs is a huge asset to us. Denise has been the driving force behind many of our projects in recent years and introduced R.E.A.CH to HUGs. Together the two charities have co-funded many projects, including the building of St Gabriel's House in Fort Portal under the direction of Sister Theresa Abigaba, working with Sebastian Waiswa in Jinja and Ronald Kamoga in Kampala. Lydia and Denise also worked with Sister Evangelista Mirembe in Lira to form the Lira Women's Group. Denise lives in Marple, Stockport with her husband; she has two children and five grandchildren, and is a retired social worker (BA, MA in Health Care Ethics, CQSW). Denise is passionate about making the lives of children better.",
+  },
+];
+---
+
+<BaseLayout title="Our Trustees" description="Meet the volunteer team who run R.E.A.CH — Lydia Turner, Phil Lay, Tom Turner and Denise Ead.">
+  <PageHeader eyebrow="About R.E.A.CH" title="Meet the Team" lead="R.E.A.CH is run entirely by volunteers. No trustee takes a wage, claims expenses or is reimbursed for travel." />
+
+  <section class="container-reach space-y-10 py-16">
+    {trustees.map((t, i) => (
+      <article class:list={[
+        'grid items-start gap-8 rounded-3xl border border-sand-200 bg-white p-6 sm:p-8 md:grid-cols-3',
+      ]}>
+        <div class={i % 2 === 1 ? 'md:order-2' : ''}>
+          <Img src={t.image} alt={`${t.name} — ${t.role}`} width={600} height={600} class="aspect-square w-full rounded-2xl object-cover" />
+        </div>
+        <div class="md:col-span-2">
+          <h2 class="text-2xl font-semibold">{t.name}</h2>
+          <p class="mt-1 text-sm font-semibold uppercase tracking-wider text-accent-700">{t.role}</p>
+          <p class="mt-4 leading-relaxed text-ink-700">{t.bio}</p>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section class="container-reach pb-16">
+    <p class="rounded-2xl border border-sand-200 bg-sand-100/60 p-6 text-sm text-ink-600">
+      We are also very fortunate to have the support of family and friends in order to keep the
+      charity running — notably Rebecca Lay, who designs our annual newsletter, and Chris Demetriou,
+      our technical volunteer.
+    </p>
+  </section>
+</BaseLayout>
