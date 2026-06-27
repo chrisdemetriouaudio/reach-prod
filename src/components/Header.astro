@@ -59,18 +59,26 @@ const isActive = (href: string) =>
   </div>
 
   <!-- Mobile nav -->
-  <div id="mobile-nav" class="hidden border-t border-sand-200 bg-sand-50 lg:hidden">
+  <div id="mobile-nav" class="hidden max-h-[calc(100dvh-4.5rem)] overflow-y-auto overscroll-contain border-t border-sand-200 bg-sand-50 lg:hidden">
     <nav class="container-reach py-4" aria-label="Mobile">
       <ul class="space-y-1">
         {nav.map((item) => (
           <li>
-            <a href={item.href} class="block rounded-lg px-3 py-2 font-medium text-ink-800 hover:bg-sand-100">{item.label}</a>
-            {item.children && (
-              <ul class="ml-3 border-l border-sand-200 pl-3">
-                {item.children.map((child) => (
-                  <li><a href={child.href} class="block rounded-lg px-3 py-1.5 text-sm text-ink-600 hover:bg-sand-100">{child.label}</a></li>
-                ))}
-              </ul>
+            {item.children ? (
+              <details class="group">
+                <summary class="flex cursor-pointer list-none items-center justify-between rounded-lg px-3 py-2 font-medium text-ink-800 hover:bg-sand-100 [&::-webkit-details-marker]:hidden">
+                  {item.label}
+                  <svg class="h-4 w-4 text-ink-500 transition group-open:rotate-180" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </summary>
+                <ul class="ml-3 border-l border-sand-200 pl-3">
+                  <li><a href={item.href} class="block rounded-lg px-3 py-1.5 text-sm font-medium text-accent-700 hover:bg-sand-100">{item.label} overview</a></li>
+                  {item.children.map((child) => (
+                    <li><a href={child.href} class="block rounded-lg px-3 py-1.5 text-sm text-ink-600 hover:bg-sand-100">{child.label}</a></li>
+                  ))}
+                </ul>
+              </details>
+            ) : (
+              <a href={item.href} class="block rounded-lg px-3 py-2 font-medium text-ink-800 hover:bg-sand-100">{item.label}</a>
             )}
           </li>
         ))}
