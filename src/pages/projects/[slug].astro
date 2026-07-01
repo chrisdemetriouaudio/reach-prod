@@ -28,7 +28,7 @@ const others = projects.filter((p) => p.slug !== project.slug).slice(0, 3);
       {project.sections.map((section) => (
         <div>
           {section.heading && <h2>{section.heading}</h2>}
-          {section.paragraphs?.map((p) => <p>{p}</p>)}
+          {section.paragraphs?.map((p) => <p set:html={p}></p>)}
           {section.list && <ul>{section.list.map((li) => <li>{li}</li>)}</ul>}
         </div>
       ))}

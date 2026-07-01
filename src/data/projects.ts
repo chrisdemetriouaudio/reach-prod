@@ -110,6 +110,7 @@ export const projects: Project[] = [
         paragraphs: [
           'We have started linking groups of women in the UK and Uganda with the aim of improving quality of life, developing and learning new skills, and empowering women so that they are better able to support their families in the long term.',
           'We have shared life stories and recipes, and in 2019 we created a charity single and song together. The Lira Women’s Group, formed with Sr Evangelista Mirembe, was linked with the WI (Rolling Scones) in Marple.',
+          'All funds raised from our activities are used to support sustainable projects in Uganda — this has included buying equipment and funding training courses for the women.',
         ],
       },
     ],
@@ -118,12 +119,20 @@ export const projects: Project[] = [
     slug: 'visitors-to-uganda-2014',
     title: 'Visitors to Uganda – 2014',
     summary:
-      'We welcome supporters who would like to visit our projects in Uganda and meet our trusted advisors. Get in touch for contacts and travel advice.',
+      'In 2014 Jamie Clarke visited Sr Theresa and the children at the Good Shepherd School. We welcome supporters who’d like to visit our projects — get in touch for contacts and travel advice.',
     sections: [
       {
         paragraphs: [
-          'Members of R.E.A.CH have visited Uganda to see our projects first-hand, meet the children we support and work alongside our trusted advisors.',
+          'In summer 2014, Jamie Clarke — a neighbour of trustees Tom and Lydia — took a break from his university studies to visit Uganda. As well as volunteering with another organisation, Jamie visited Sr Theresa at the Good Shepherd Special School and spent some time with the children.',
+          '“I am very thankful to R.E.A.CH for putting me in touch with Sr Theresa and the children at The Good Shepherd School. The children are incredible and I think about them every day. It was good to see first hand how the money being raised by R.E.A.CH helps these children — it really does make a huge difference. I cannot wait to go back!” — Jamie Clarke',
           'Should you have family or friends who would like to visit Uganda, please do contact us and we can provide you with some contacts and travel advice.',
+        ],
+      },
+      {
+        heading: 'What next?',
+        paragraphs: [
+          'In 2016 we hoped to build accommodation for a group of orphans in Western Uganda who were living in very small, cramped and uncomfortable housing. In partnership with Helping Uganda Schools (HUGs) we planned to build new living quarters to vastly improve their quality of life — work that grew into St Gabriel’s House.',
+          'We also hoped to set up further school partnerships with schools in the North West, with the aim of ultimately having all seven Good Shepherd School classes each linked with and supported by a UK school. Please contact us if your school would be interested.',
         ],
       },
     ],
@@ -132,27 +141,29 @@ export const projects: Project[] = [
     slug: 'good-shepherd-special-needs-school',
     title: 'Good Shepherd Special Needs School',
     summary:
-      'A special school in Fort Portal, Western Uganda, led by our trusted advisor Sr Theresa Abigaba, where many of the children we support live and learn.',
-    stub: true,
+      'Supporting orphaned children cared for by Sr Theresa in Fort Portal, and funding school fees for a class of children at the Good Shepherd Special Needs School.',
     sections: [
       {
         paragraphs: [
-          'The Good Shepherd Special School in Fort Portal, Western Uganda is home to many of the vulnerable children R.E.A.CH supports, under the care of our trusted advisor Sr Theresa Abigaba. It is also where St Gabriel’s House — the purpose-built accommodation funded by R.E.A.CH and Helping Uganda Schools — provides a safe home for children in the Orphan Support Project.',
-          'The detailed content for this page could not be recovered from the original website archive. If you have information or photographs you would like to add, please get in touch.',
+          'The Good Shepherd Special Needs School in Fort Portal, Western Uganda was built by our partner charity Helping Uganda Schools (HUGs) in 2008, which continues to support its running. It is home to many of the vulnerable children R.E.A.CH supports, under the care of our trusted advisor Sr Theresa Abigaba — and is where St Gabriel’s House, the accommodation funded by R.E.A.CH and HUGs, provides a safe home for children in the Orphan Support Project.',
+          'Currently, our funds are being spent on supporting a group of 14 vulnerable and orphaned children being cared for by Sr Theresa in Fort Portal, and on the school fees for a class of children (Primary 4) at the school.',
         ],
       },
     ],
   },
   {
     slug: 'the-joy-of-learning-project',
-    title: 'The Joy of Learning Project',
-    summary: 'One of the education projects supported by R.E.A.CH in Uganda.',
-    stub: true,
+    title: 'The Joy of Play Project',
+    summary:
+      'A twice-weekly playgroup in a Kampala slum giving pre-school children a safe space to access toys and food — and just be children — funded by R.E.A.CH and run by our representative Ronald Kamoga.',
+    gallery: [
+      { src: '/images/joy-of-play.jpg', alt: 'A play leader and pre-school children with their arms raised at the Joy of Play playgroup in Kampala' },
+    ],
     sections: [
       {
         paragraphs: [
-          'The Joy of Learning Project is one of the education initiatives supported by R.E.A.CH in Uganda.',
-          'The detailed content for this page could not be recovered from the original website archive. If you have information or photographs you would like to add, please get in touch.',
+          'Our Joy of Play project was initiated in 2023 and operates in one of Kampala’s slum areas. This playgroup project runs twice a week and provides a safe space for pre-school age children to access toys and food, allowing them to just be a child for a few hours each week. The children attending are some of the most vulnerable in Uganda’s society. They have no toys of their own and may spend much of their time fending for themselves in the slum. We are so happy to be able to fund this playgroup and bring joy to these children.',
+          'This project is managed by our trusted representative, Ronald Kamoga. Ronald sends us regular reports, photos and videos. Follow us on <a href="https://www.facebook.com/BuryAfricanOutreach" target="_blank" rel="noopener">Facebook</a> to see the latest updates.',
         ],
       },
     ],
@@ -160,13 +171,13 @@ export const projects: Project[] = [
   {
     slug: 'link-and-learn-2015',
     title: 'Link and Learn – 2015 School Partnership',
-    summary: 'A 2015 school partnership linking pupils in the UK and Uganda.',
-    stub: true,
+    summary:
+      'In 2015 R.E.A.CH linked with Helping Uganda Schools and connected St Gabriel’s RC High in Bury with the Good Shepherd Special Needs School in Fort Portal.',
     sections: [
       {
         paragraphs: [
-          'Link and Learn was a 2015 school partnership connecting pupils in the UK and Uganda to share learning and build understanding between the two communities.',
-          'The detailed content for this page could not be recovered from the original website archive. If you have information or photographs you would like to add, please get in touch.',
+          'In 2015 R.E.A.CH linked with Helping Uganda Schools (HUGs), another UK-based charity supporting children’s education in Uganda. HUGs helped build the Good Shepherd Special Needs School in Fort Portal in 2008 and continues to support its running. Having visited the school ourselves in 2013, we were keen to get involved.',
+          'That year we also established a link between St Gabriel’s RC High School in Bury — long-term supporters of R.E.A.CH — and the Good Shepherd Special Needs School. Sr Theresa visited St Gabriel’s in the spring of 2015 and took back almost 50 letters from Year 7–9 pupils for her own students. The children are sharing experiences of their lives in the UK and Uganda, and we hope this will be the beginning of a long-term learning partnership.',
         ],
       },
     ],

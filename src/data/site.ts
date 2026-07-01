@@ -52,7 +52,7 @@ export const nav: NavItem[] = [
     href: '/projects',
     children: [
       { label: 'Kosovo Education Project', href: '/projects/kosovo-education-project' },
-      { label: 'The Joy of Learning Project', href: '/projects/the-joy-of-learning-project' },
+      { label: 'The Joy of Play Project', href: '/projects/the-joy-of-learning-project' },
       { label: "Women's Group", href: '/projects/womens-group' },
       { label: 'Family Support Initiative', href: '/projects/family-support-initiative' },
       { label: 'Orphan Support Project', href: '/projects/orphan-support-project' },
