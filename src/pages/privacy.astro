@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout title="Privacy & Cookies" description="How R.E.A.CH (Reaching East Africa's CHildren) handles your information and uses cookies on this website.">
+  <PageHeader eyebrow="Legal" title="Privacy & Cookies" lead="How we handle your information and use cookies on this website." />
+
+  <article class="container-reach py-16">
+    <div class="prose-reach max-w-3xl">
+      <p class="rounded-xl border border-sand-200 bg-sand-100/60 p-4 text-sm text-ink-600">
+        This is a plain-English summary of how this website handles information. Trustees should
+        review and adapt it to reflect the charity’s full data-handling practices before relying on it.
+      </p>
+
+      <h2>Who we are</h2>
+      <p>
+        R.E.A.CH (Reaching East Africa’s CHildren) is a UK registered charity (number {site.charityNumber}).
+        For any questions about this policy or your information, contact us at
+        <a href={`mailto:${site.email}`}>{site.email}</a>, or by post at {site.address.name},
+        {site.address.lines.join(', ')}.
+      </p>
+
+      <h2>The information we collect</h2>
+      <p>
+        This is a simple, static website. We do not run user accounts, and we do not sell or share
+        your information for advertising. The main way we collect personal information is when you
+        choose to contact us:
+      </p>
+      <ul>
+        <li>
+          <strong>Contact form.</strong> If you send a message, we collect the name, email address and
+          message you provide, so we can reply. These are delivered to our charity inbox and are not
+          used for marketing.
+        </li>
+        <li>
+          <strong>Email, phone and WhatsApp.</strong> If you contact us directly, we keep your message
+          and details only for as long as needed to help you.
+        </li>
+      </ul>
+
+      <h2>Cookies and similar technologies</h2>
+      <p>
+        We keep cookies to a minimum. The site works without advertising or cross-site tracking
+        cookies. The consent banner records your choice (accept or decline) in your browser’s local
+        storage so we don’t ask again. If we later add website analytics to understand how the site is
+        used, it will only run if you have accepted.
+      </p>
+      <p>
+        Our contact form uses <strong>Cloudflare Turnstile</strong> to protect against spam. Turnstile
+        is privacy-friendly and does not use cookies to track you across websites or serve advertising.
+      </p>
+
+      <h2>The services we rely on</h2>
+      <p>
+        To run the website securely we use a small number of reputable providers, who process limited
+        technical data (such as your IP address) to deliver and protect the site:
+      </p>
+      <ul>
+        <li><strong>GitHub Pages</strong> — hosts the website files.</li>
+        <li><strong>Cloudflare</strong> — DNS, security and spam protection (Turnstile).</li>
+        <li><strong>Formspree</strong> — delivers contact-form messages to our inbox.</li>
+      </ul>
+
+      <h2>Your rights</h2>
+      <p>
+        Under UK data protection law you have the right to ask for a copy of the personal information
+        we hold about you, to have it corrected, or to have it deleted. To make a request, email us at
+        <a href={`mailto:${site.email}`}>{site.email}</a>. You also have the right to complain to the
+        Information Commissioner’s Office (ICO) at ico.org.uk.
+      </p>
+
+      <h2>Changes to this policy</h2>
+      <p>
+        We may update this policy from time to time. Any changes will appear on this page.
+      </p>
+    </div>
+
+    <div class="mt-10">
+      <a href="/contact-us" class="btn-primary">Contact us</a>
+    </div>
+  </article>
+</BaseLayout>

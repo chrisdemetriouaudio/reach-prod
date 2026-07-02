@@ -1,0 +1,54 @@
+---
+// Cookie consent banner — on-brand, remembers the visitor's choice, and gates
+// any optional analytics behind consent. The site sets no tracking cookies
+// unless the visitor accepts (analytics can listen for 'cookie-consent-granted').
+---
+<div
+  id="cookie-consent"
+  class="fixed inset-x-0 bottom-0 z-[60] hidden px-4 pb-4 sm:px-6"
+  role="dialog"
+  aria-label="Cookie consent"
+  aria-live="polite"
+>
+  <div class="container-reach">
+    <div class="mx-auto flex max-w-3xl flex-col gap-4 rounded-2xl border border-sand-200 bg-white/95 p-5 shadow-xl shadow-ink-900/10 backdrop-blur sm:flex-row sm:items-center sm:gap-6">
+      <p class="flex-1 text-sm leading-relaxed text-ink-700">
+        We use a few cookies to make this site work and, with your permission, to
+        measure how it’s used so we can improve it. See our
+        <a href="/privacy" class="font-medium text-accent-700 underline underline-offset-2 hover:text-accent-800">privacy &amp; cookies</a>
+        page.
+      </p>
+      <div class="flex shrink-0 gap-2">
+        <button id="cookie-decline" type="button" class="btn-ghost !px-5 !py-2">Decline</button>
+        <button id="cookie-accept" type="button" class="btn-primary !px-5 !py-2">Accept</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    var KEY = 'reach-cookie-consent';
+    var el = document.getElementById('cookie-consent');
+    if (!el) return;
+    var choice = null;
+    try { choice = localStorage.getItem(KEY); } catch (e) {}
+
+    if (!choice) {
+      el.classList.remove('hidden');
+    } else if (choice === 'granted') {
+      window.dispatchEvent(new CustomEvent('cookie-consent-granted'));
+    }
+
+    function decide(value) {
+      try { localStorage.setItem(KEY, value); } catch (e) {}
+      el.classList.add('hidden');
+      if (value === 'granted') window.dispatchEvent(new CustomEvent('cookie-consent-granted'));
+    }
+
+    var accept = document.getElementById('cookie-accept');
+    var decline = document.getElementById('cookie-decline');
+    if (accept) accept.addEventListener('click', function () { decide('granted'); });
+    if (decline) decline.addEventListener('click', function () { decide('denied'); });
+  })();
+</script>

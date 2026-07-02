@@ -17,15 +17,16 @@ export const site = {
   },
   facebook: 'https://www.facebook.com/BuryAfricanOutreach',
 
-  // --- Contact form delivery + spam protection ---
-  // 1) Create a free form at https://formspree.io, set its email to
-  //    reachchildrenuganda@outlook.com, and paste the endpoint here
-  //    (looks like https://formspree.io/f/abcdwxyz).
-  // 2) Optional but recommended: create a Google reCAPTCHA v2 ("I'm not a robot")
-  //    at https://www.google.com/recaptcha/admin and paste the SITE key here.
-  //    Leave blank to rely on the honeypot + Formspree's own spam filtering.
-  formspreeEndpoint: 'https://formspree.io/f/YOUR_FORM_ID',
-  recaptchaSiteKey: '',
+  // --- Contact form (spam-hardened) ---
+  // The form POSTs to a Cloudflare Worker that verifies a Cloudflare Turnstile
+  // token server-side, checks the honeypot, then forwards to Formspree.
+  // Full setup: docs/CONTACT-FORM-SETUP.md
+  //
+  // 1) Turnstile SITE key (public) — Cloudflare dashboard → Turnstile → Add site:
+  turnstileSiteKey: '',
+  // 2) Your Worker URL (where the form posts), e.g.
+  //    https://reach-contact.<your-subdomain>.workers.dev
+  contactEndpoint: '',
 };
 
 export type NavItem = {

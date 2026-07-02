@@ -1,0 +1,18 @@
+# Optional: deploy the contact Worker with the Wrangler CLI.
+#   npm i -g wrangler
+#   cd worker
+#   wrangler deploy
+#   wrangler secret put TURNSTILE_SECRET      # paste your Turnstile secret key
+#   # then set FORMSPREE_ENDPOINT in the dashboard, or add a [vars] entry below
+#
+# (You can also skip Wrangler entirely and paste contact-worker.js into the
+#  Cloudflare dashboard: Workers & Pages → Create → paste → set variables.)
+
+name = "reach-contact"
+main = "contact-worker.js"
+compatibility_date = "2024-11-01"
+
+# Non-secret variable (safe to commit). Replace with your Formspree endpoint,
+# or set it in the dashboard instead.
+# [vars]
+# FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID"

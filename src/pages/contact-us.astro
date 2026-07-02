@@ -3,7 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
 import { site } from '../data/site';
 
-const recaptchaKey = site.recaptchaSiteKey;
+const turnstileKey = site.turnstileSiteKey;
+const endpoint = site.contactEndpoint;
 ---
 
 <BaseLayout title="Contact Us" description="Get in touch with R.E.A.CH to talk about our work, fundraising or a trip to Uganda.">
@@ -52,7 +53,7 @@ const recaptchaKey = site.recaptchaSiteKey;
         </dl>
       </div>
 
-      <!-- Form: posts to Formspree, which emails the charity inbox. -->
+      <!-- Form: posts to a Cloudflare Worker that verifies Turnstile + honeypot, then forwards to Formspree. -->
       <div class="rounded-3xl border border-sand-200 bg-white p-7">
         <h2 class="text-2xl font-semibold">Send us a message</h2>
         <p class="mt-2 text-sm text-ink-500">We'll get back to you by email as soon as we can.</p>
@@ -78,23 +79,8 @@ const recaptchaKey = site.recaptchaSiteKey;
           <!-- Email subject line in the charity inbox -->
           <input type="hidden" name="_subject" value="New enquiry from the R.E.A.CH website" />
 
-          {recaptchaKey ? (
-            <div class="g-recaptcha" data-sitekey={recaptchaKey}></div>
-          ) : (
-            <div class="rounded-xl border border-sand-200 bg-sand-50 p-4">
-              <label for="captcha" class="block text-sm font-medium text-ink-700">
-                Spam check — please answer: <span id="captcha-q" class="font-semibold text-ink-900">…</span>
-              </label>
-              <input
-                id="captcha"
-                name="_captcha_answer"
-                type="text"
-                inputmode="numeric"
-                autocomplete="off"
-                required
-                class="mt-2 w-32 rounded-xl border border-sand-300 bg-white px-4 py-2.5 focus:border-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-100"
-              />
-            </div>
+          {turnstileKey && (
+            <div class="cf-turnstile" data-sitekey={turnstileKey} data-theme="light" data-size="flexible"></div>
           )}
 
           <button type="submit" id="contact-submit" class="btn-primary w-full">Send message</button>
@@ -105,27 +91,14 @@ const recaptchaKey = site.recaptchaSiteKey;
     </div>
   </section>
 
-  {recaptchaKey && (
-    <script is:inline src="https://www.google.com/recaptcha/api.js" async defer></script>
+  {turnstileKey && (
+    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   )}
 
-  <script is:inline define:vars={{ endpoint: site.formspreeEndpoint, recaptchaKey, email: site.email }}>
+  <script is:inline define:vars={{ endpoint, turnstileKey, email: site.email }}>
     const form = document.getElementById('contact-form');
     const statusEl = document.getElementById('contact-status');
     const submitBtn = document.getElementById('contact-submit');
-
-    // --- Built-in math captcha (used when no reCAPTCHA key is set) ---
-    let captchaSum = 0;
-    const captchaQ = document.getElementById('captcha-q');
-    const captchaInput = document.getElementById('captcha');
-    function newCaptcha() {
-      const a = Math.floor(Math.random() * 8) + 2; // 2..9
-      const b = Math.floor(Math.random() * 8) + 2; // 2..9
-      captchaSum = a + b;
-      if (captchaQ) captchaQ.textContent = `What is ${a} + ${b}?`;
-      if (captchaInput) captchaInput.value = '';
-    }
-    if (captchaQ) newCaptcha();
 
     function show(message, kind) {
       statusEl.textContent = message;
@@ -142,44 +115,43 @@ const recaptchaKey = site.recaptchaSiteKey;
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      // Not configured yet — guide rather than fail silently.
-      if (!endpoint || endpoint.includes('YOUR_FORM_ID')) {
+      if (!endpoint) {
         show('The contact form is not connected yet. In the meantime, please email us at ' + email + '.', 'warn');
         return;
       }
 
-      // reCAPTCHA must be ticked (only if a key is configured).
-      if (recaptchaKey && typeof grecaptcha !== 'undefined') {
-        if (!grecaptcha.getResponse()) {
-          show('Please tick the "I’m not a robot" box before sending.', 'warn');
-          return;
-        }
+      // Cloudflare Turnstile injects this hidden field into the form once solved.
+      const tokenField = form.querySelector('[name="cf-turnstile-response"]');
+      const token = tokenField ? tokenField.value : '';
+      if (turnstileKey && !token) {
+        show('Please complete the anti-spam check before sending.', 'warn');
+        return;
       }
 
-      // Built-in math captcha (used when reCAPTCHA isn't configured).
-      if (!recaptchaKey && captchaQ) {
-        if (parseInt(captchaInput.value, 10) !== captchaSum) {
-          show('That spam-check answer wasn’t right — please try again.', 'warn');
-          newCaptcha();
-          return;
-        }
-      }
-
+      const data = new FormData(form);
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending…';
 
       try {
         const res = await fetch(endpoint, {
           method: 'POST',
-          headers: { Accept: 'application/json' },
-          body: new FormData(form),
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            name: data.get('name'),
+            email: data.get('email'),
+            message: data.get('message'),
+            _gotcha: data.get('_gotcha') || '',
+            token,
+          }),
         });
-        if (res.ok) {
+        const out = await res.json().catch(() => ({}));
+        if (res.ok && out.ok) {
           form.reset();
-          if (recaptchaKey && typeof grecaptcha !== 'undefined') grecaptcha.reset();
+          if (typeof turnstile !== 'undefined') turnstile.reset();
           show('Thank you! Your message has been sent. We’ll be in touch soon.', 'ok');
         } else {
-          show('Sorry, something went wrong. Please email us directly at ' + email + '.', 'err');
+          show((out && out.error) || 'Sorry, something went wrong. Please email us directly at ' + email + '.', 'err');
+          if (typeof turnstile !== 'undefined') turnstile.reset();
         }
       } catch (err) {
         show('Sorry, your message could not be sent. Please email us directly at ' + email + '.', 'err');
