@@ -23,10 +23,10 @@ export const site = {
   // Full setup: docs/CONTACT-FORM-SETUP.md
   //
   // 1) Turnstile SITE key (public) — Cloudflare dashboard → Turnstile → Add site:
-  turnstileSiteKey: '',
+  turnstileSiteKey: '0x4AAAAAAFZUgLKaUNiKzEoZ',
   // 2) Your Worker URL (where the form posts), e.g.
   //    https://reach-contact.<your-subdomain>.workers.dev
-  contactEndpoint: '',
+  contactEndpoint: 'https://reach-contact.christian4collective.workers.dev',
 };
 
 export type NavItem = {

@@ -12,7 +12,6 @@ name = "reach-contact"
 main = "contact-worker.js"
 compatibility_date = "2024-11-01"
 
-# Non-secret variable (safe to commit). Replace with your Formspree endpoint,
-# or set it in the dashboard instead.
-# [vars]
-# FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID"
+# Non-secret variable (safe to commit): the Formspree form that e-mails the charity inbox.
+[vars]
+FORMSPREE_ENDPOINT = "https://formspree.io/f/mdeabjek"
