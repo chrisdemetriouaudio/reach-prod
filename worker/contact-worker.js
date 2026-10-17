@@ -2,16 +2,22 @@
  * Cloudflare Worker — contact form gateway for reach-children-uganda.org.uk
  *
  * Flow: the website form POSTs here → this Worker verifies the Cloudflare
- * Turnstile token (server-side), checks the honeypot, then forwards the
- * message to Formspree. Bots that skip the widget or POST directly are rejected.
+ * Turnstile token (server-side), checks the honeypot, then e-mails the message
+ * straight to the charity inbox through Cloudflare Email Routing (the EMAIL
+ * binding, locked to that one verified address). No third-party spam filter,
+ * so real messages can't be quarantined. Reply-To is the visitor.
  *
- * Set these on the Worker:
- *   TURNSTILE_SECRET    (Secret)   – your Turnstile SECRET key (wrangler secret put)
- *   FORMSPREE_ENDPOINT  (Variable) – e.g. https://formspree.io/f/abcdwxyz (wrangler.toml)
+ * Set on the Worker:
+ *   TURNSTILE_SECRET  (Secret) – the Turnstile SECRET key (wrangler secret put)
  *
  * Only the charity's own pages may post here, the Turnstile token must have been
  * issued for the charity's site, and every field is length-checked.
  */
+
+import { EmailMessage } from 'cloudflare:email';
+
+const FROM = 'forms@reach-children-uganda.org.uk';
+const TO = 'reachchildrenuganda@outlook.com';
 
 const ALLOWED_ORIGINS = [
   'https://reach-children-uganda.org.uk',
@@ -54,7 +60,7 @@ export default {
     if (!ALLOWED_ORIGINS.includes(origin)) {
       return json({ ok: false, error: 'Forbidden' }, 403, origin);
     }
-    if (!env.TURNSTILE_SECRET || !env.FORMSPREE_ENDPOINT) {
+    if (!env.TURNSTILE_SECRET || !env.EMAIL) {
       return json({ ok: false, error: 'The contact form is not set up yet. Please email us directly.' }, 503, origin);
     }
 
@@ -110,28 +116,40 @@ export default {
       return json({ ok: false, error: 'Anti-spam check failed — please try again.' }, 403, origin);
     }
 
-    // 2) Forward the (verified) message to Formspree
-    let fwd;
+    // 2) E-mail the (verified) message to the charity inbox.
     try {
-      fwd = await fetch(env.FORMSPREE_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          name,
-          email,
-          message,
-          _replyto: email,
-          _subject: 'New enquiry from the R.E.A.CH website',
-        }),
-      });
-    } catch {
-      fwd = null;
-    }
-
-    if (!fwd || !fwd.ok) {
+      const msg = new EmailMessage(FROM, TO, buildMime({ name, email, message }));
+      await env.EMAIL.send(msg);
+    } catch (e) {
+      console.error(JSON.stringify({ contact: 'send_failed', error: e && e.message }));
       return json({ ok: false, error: 'Could not send your message. Please email us directly.' }, 502, origin);
     }
 
     return json({ ok: true }, 200, origin);
   },
 };
+
+/** A plain-text e-mail. Visitor text only ever goes in the (base64) body; the one
+ *  header it touches, Reply-To, is an address already checked to have no spaces. */
+function buildMime({ name, email, message }) {
+  const b64 = (str) => {
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    for (const b of bytes) bin += String.fromCharCode(b);
+    return btoa(bin).replace(/.{76}/g, '$&\r\n');
+  };
+  const body = `New enquiry from the R.E.A.CH website contact form.\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}\n\n—\nReply to this e-mail to answer ${name} directly.\n`;
+  return [
+    `From: "R.E.A.CH website" <${FROM}>`,
+    `To: <${TO}>`,
+    `Reply-To: <${email}>`,
+    'Subject: New enquiry from the R.E.A.CH website',
+    `Message-ID: <${crypto.randomUUID()}@reach-children-uganda.org.uk>`,
+    `Date: ${new Date().toUTCString()}`,
+    'MIME-Version: 1.0',
+    'Content-Type: text/plain; charset=utf-8',
+    'Content-Transfer-Encoding: base64',
+    '',
+    b64(body),
+  ].join('\r\n');
+}

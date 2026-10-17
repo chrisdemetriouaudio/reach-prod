@@ -1,9 +1,11 @@
 # Contact form setup — Turnstile + Worker + Formspree
 
-> **Live setup (17 Oct 2026)**
-> - **Formspree form:** "R.E.A.CH website" → the charity inbox (`https://formspree.io/f/mdeabjek`, in `worker/wrangler.toml`).
-> - **Turnstile widget:** "R.E.A.CH contact" (site key in `src/data/site.ts`; secret stored on the Worker only).
-> - **Worker:** `reach-contact` at `https://reach-contact.christian4collective.workers.dev`, in the radar-amaze-equate Cloudflare account. Deploy changes with `npx wrangler deploy` in `worker/`.
+> **Live setup (17 Oct 2026) — this replaces the Formspree steps below**
+> - **No Formspree.** The Worker e-mails the charity inbox itself through Cloudflare **Email Routing** (already on for the domain; the inbox is a verified destination). Nothing can be quarantined by a third-party spam filter.
+> - **Worker:** `reach-contact` at `https://contact.reach-children-uganda.org.uk`, in the charity's Cloudflare account (reachchildrenuganda@outlook.com). Sends from `forms@reach-children-uganda.org.uk`, Reply-To the visitor.
+> - **Turnstile:** site key in `src/data/site.ts`; secret stored on the Worker only.
+> - **Deploy changes** (signed in to the charity's account, kept separate from other logins):
+>   `cd worker && XDG_CONFIG_HOME="$HOME/.config/reach-cloudflare" npx wrangler deploy`
 
 The contact form is spam-hardened with three layers:
 

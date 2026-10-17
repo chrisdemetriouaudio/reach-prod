@@ -26,7 +26,7 @@ export const site = {
   turnstileSiteKey: '0x4AAAAAAFZUgLKaUNiKzEoZ',
   // 2) Your Worker URL (where the form posts), e.g.
   //    https://reach-contact.<your-subdomain>.workers.dev
-  contactEndpoint: 'https://reach-contact.christian4collective.workers.dev',
+  contactEndpoint: 'https://contact.reach-children-uganda.org.uk',
 };
 
 export type NavItem = {
