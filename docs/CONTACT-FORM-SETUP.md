@@ -1,5 +1,10 @@
 # Contact form setup — Turnstile + Worker + Formspree
 
+> **Live setup (17 Oct 2026)**
+> - **Formspree form:** "R.E.A.CH website" → the charity inbox (`https://formspree.io/f/mdeabjek`, in `worker/wrangler.toml`).
+> - **Turnstile widget:** "R.E.A.CH contact" (site key in `src/data/site.ts`; secret stored on the Worker only).
+> - **Worker:** `reach-contact` at `https://reach-contact.christian4collective.workers.dev`, in the radar-amaze-equate Cloudflare account. Deploy changes with `npx wrangler deploy` in `worker/`.
+
 The contact form is spam-hardened with three layers:
 
 1. **Honeypot** — a hidden field bots fill and humans don't; the Worker drops those.
