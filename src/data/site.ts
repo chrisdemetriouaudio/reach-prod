@@ -64,6 +64,17 @@ export const nav: NavItem[] = [
     ],
   },
   { label: 'News', href: '/news' },
-  { label: 'Donate', href: '/donate' },
+  {
+    label: 'Donate',
+    href: '/donate',
+    children: [
+      { label: 'All ways to donate', href: '/donate' },
+      { label: 'Sponsor a secondary school child', href: '/donate/sponsor-a-secondary-school-child' },
+      { label: 'Sponsor a primary school child', href: '/donate/sponsor-a-primary-school-child' },
+      { label: 'Give a school uniform', href: '/donate/school-uniform' },
+      { label: 'Gift Aid', href: '/donate/gift-aid' },
+      { label: 'Fundraising events', href: '/fundraising' },
+    ],
+  },
   { label: 'Contact Us', href: '/contact-us' },
 ];

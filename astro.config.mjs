@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
+import sitemap from '@astrojs/sitemap';
 
 // Custom-domain deployment (reach-children-uganda.org.uk) on GitHub Pages.
 // Because we serve from the domain root, `base` stays "/".
@@ -9,7 +10,8 @@ export default defineConfig({
   site: 'https://reach-children-uganda.org.uk',
   base: '/',
   trailingSlash: 'ignore',
-  integrations: [tailwind()],
+  // The sitemap is generated on every build, so new pages are always listed.
+  integrations: [tailwind(), sitemap({ filter: (page) => !page.includes('/404') })],
   build: {
     format: 'directory',
   },

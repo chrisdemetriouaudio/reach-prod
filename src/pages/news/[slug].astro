@@ -8,9 +8,30 @@ export function getStaticPaths() {
 }
 
 const { post } = Astro.props;
+
+// Event structured data, so search engines can show the fundraiser as an event.
+const siteUrl = Astro.site ?? new URL('https://reach-children-uganda.org.uk');
+const parsed = new Date(`${post.eventDate} 12:00 UTC`);
+const startDate = Number.isNaN(parsed.getTime()) ? undefined : parsed.toISOString().slice(0, 10);
+const eventSchema = startDate ? {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: `${post.title} — R.E.A.CH fundraiser`,
+  description: post.blurb,
+  startDate,
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  eventStatus: 'https://schema.org/EventScheduled',
+  location: {
+    '@type': 'Place',
+    name: post.venue,
+    address: { '@type': 'PostalAddress', addressLocality: post.location, addressCountry: 'GB' },
+  },
+  organizer: { '@id': new URL('/#organization', siteUrl).href },
+  url: new URL(`/news/${post.slug}/`, siteUrl).href,
+} : undefined;
 ---
 
-<BaseLayout title={post.title} description={post.blurb}>
+<BaseLayout title={post.title} description={post.blurb} schema={eventSchema}>
   <PageHeader eyebrow="News & Events" title={post.title} />
 
   <article class="container-reach py-16">

@@ -2,28 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
 
-const faqs = [
-  { q: 'How much does it cost to send a child to school?', a: "Costs vary depending on the child's age — the older they get, the more expensive it becomes. As an example, £12.50 will pay for a primary school child to attend school for a month." },
-  { q: 'Does the charity pay wages?', a: 'No. No one involved with the charity takes a wage or claims expenses.' },
-  { q: 'How much does R.E.A.CH raise on average?', a: 'We aim to raise between £8,000 and £10,000 each year.' },
-  { q: "Why 'Reaching East Africa's Children'?", a: "The charity was originally started in Bury, Lancashire and began life as 'Bury African Outreach' back in 1992. Many of our regular donors still live in the area. However, the current trustees no longer live in Bury, so in 2023 the name was changed to R.E.A.CH as we felt this would allow us to run the charity more effectively. We now have donors across the UK and beyond." },
-  { q: 'Where does all the money come from?', a: 'Approximately 70% comes via monthly direct debits and the rest comes from fundraising events.' },
-  { q: 'Is Uganda safe?', a: 'Yes. The country is rebuilding itself after years of civil unrest and is now beginning to thrive as a popular tourist destination. Many tourists visit Uganda to see the endangered mountain gorillas.' },
-  { q: 'Can I go?', a: 'Yes — please do. You are welcome to visit our projects and meet the trusted advisors. Please contact us for travel tips.' },
-];
+import { faqs, faqSchema as buildFaqSchema } from '../data/faq';
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: faqs.map((f) => ({
-    '@type': 'Question',
-    name: f.q,
-    acceptedAnswer: { '@type': 'Answer', text: f.a },
-  })),
-};
+const faqSchema = buildFaqSchema(faqs);
 ---
 
-<BaseLayout title="Frequently Asked Questions" description="Answers to the questions we are asked most often about R.E.A.CH, our work in Uganda and how donations are used.">
+<BaseLayout title="Frequently Asked Questions" description="Answers about R.E.A.CH: what it costs to send a child to school in Uganda, how to donate and Gift Aid, where we work, and how the charity is run." schema={faqSchema}>
   <PageHeader eyebrow="About R.E.A.CH" title="Frequently Asked Questions" />
 
   <section class="container-reach py-16">
@@ -47,5 +31,4 @@ const faqSchema = {
     </div>
   </section>
 
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 </BaseLayout>
