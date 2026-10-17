@@ -1,17 +1,19 @@
-# Optional: deploy the contact Worker with the Wrangler CLI.
-#   npm i -g wrangler
-#   cd worker
-#   wrangler deploy
-#   wrangler secret put TURNSTILE_SECRET      # paste your Turnstile secret key
-#   # then set FORMSPREE_ENDPOINT in the dashboard, or add a [vars] entry below
-#
-# (You can also skip Wrangler entirely and paste contact-worker.js into the
-#  Cloudflare dashboard: Workers & Pages → Create → paste → set variables.)
+# The contact form's Worker. Deploy from this folder, signed in to the charity's
+# Cloudflare account:
+#   XDG_CONFIG_HOME="$HOME/.config/reach-cloudflare" npx wrangler deploy
+# Secret (once): ... npx wrangler secret put TURNSTILE_SECRET
 
 name = "reach-contact"
 main = "contact-worker.js"
 compatibility_date = "2024-11-01"
+workers_dev = false
 
-# Non-secret variable (safe to commit): the Formspree form that e-mails the charity inbox.
-[vars]
-FORMSPREE_ENDPOINT = "https://formspree.io/f/mdeabjek"
+# Lives in the charity's own Cloudflare account (reachchildrenuganda@outlook.com),
+# on the charity's domain.
+account_id = "af6a74ee344a9b92d686c28eca47ef10"
+routes = [{ pattern = "contact.reach-children-uganda.org.uk", custom_domain = true }]
+
+# E-mail via Cloudflare Email Routing, locked to the one verified inbox.
+[[send_email]]
+name = "EMAIL"
+destination_address = "reachchildrenuganda@outlook.com"
