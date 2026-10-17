@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Img from '../../components/Img.astro';
 import { projects } from '../../data/projects';
+import { ways } from '../../data/ways';
 
 export function getStaticPaths() {
   return projects.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
@@ -10,9 +11,20 @@ export function getStaticPaths() {
 
 const { project } = Astro.props;
 const others = projects.filter((p) => p.slug !== project.slug).slice(0, 3);
+const helps = ways.filter((w) => w.relatedProjects.includes(project.slug));
+const siteUrl = Astro.site ?? new URL('https://reach-children-uganda.org.uk');
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: `${project.title} — R.E.A.CH project in Uganda`,
+  url: new URL(`/projects/${project.slug}/`, siteUrl).href,
+  description: project.summary,
+  ...(project.image ? { primaryImageOfPage: new URL(project.image, siteUrl).href } : {}),
+  about: { '@id': new URL('/#organization', siteUrl).href },
+};
 ---
 
-<BaseLayout title={project.title} description={project.summary}>
+<BaseLayout title={project.title} description={project.summary} image={project.image} schema={schema}>
   <PageHeader eyebrow="Project" title={project.title} lead={project.summary} />
 
   <article class="container-reach py-16">
@@ -45,6 +57,20 @@ const others = projects.filter((p) => p.slug !== project.slug).slice(0, 3);
       <a href="/donate" class="btn-primary">Support this work</a>
       <a href="/projects" class="btn-ghost">All projects</a>
     </div>
+
+    {helps.length > 0 && (
+      <div class="mt-10 max-w-3xl rounded-2xl bg-accent-50 p-6">
+        <h2 class="text-lg font-semibold">Ways to help this project</h2>
+        <ul class="mt-3 space-y-2 text-sm">
+          {helps.map((w) => (
+            <li>
+              <a href={`/donate/${w.slug}/`} class="font-semibold text-accent-700 hover:text-accent-800">{w.short}</a>
+              {w.amount && <span class="text-ink-600"> — {w.amount} {w.period}</span>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
   </article>
 
   <section class="border-t border-sand-200 bg-white">

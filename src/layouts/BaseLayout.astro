@@ -11,14 +11,20 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   noindex?: boolean;
+  /** Extra page-level structured data (JSON-LD), e.g. an Event or DonateAction. */
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+  /** Breadcrumb trail; worked out from the address when not given. */
+  crumbs?: { name: string; href: string }[];
 }
 
 const {
   title,
   description = site.description,
-  image = '/images/banner-home.png',
+  image = '/images/banner-home.jpg',
   type = 'website',
   noindex = false,
+  schema,
+  crumbs,
 } = Astro.props;
 
 const pageTitle = title ? `${title} — ${site.name}` : site.fullName;
@@ -27,9 +33,11 @@ const canonical = new URL(Astro.url.pathname, siteUrl).href;
 const ogImage = new URL(image, siteUrl).href;
 
 // Sitewide Organization (charity) structured data for search engines.
+const orgId = new URL('/#organization', siteUrl).href;
 const orgSchema = {
   '@context': 'https://schema.org',
   '@type': 'NGO',
+  '@id': orgId,
   name: site.fullName,
   alternateName: 'R.E.A.CH',
   url: siteUrl.href,
@@ -37,8 +45,19 @@ const orgSchema = {
   image: ogImage,
   description: site.description,
   email: site.email,
+  telephone: '+44 7779 587566',
+  slogan: 'Education is no weight to carry.',
   foundingDate: '1992',
-  sameAs: [site.facebook],
+  sameAs: [
+    site.facebook,
+    `https://register-of-charities.charitycommission.gov.uk/charity-search/-/charity-details/${site.charityNumber}`,
+  ],
+  potentialAction: {
+    '@type': 'DonateAction',
+    name: 'Donate to R.E.A.CH',
+    target: new URL('/donate/', siteUrl).href,
+    recipient: { '@id': orgId },
+  },
   identifier: {
     '@type': 'PropertyValue',
     name: 'UK Registered Charity Number',
@@ -53,8 +72,29 @@ const orgSchema = {
     addressCountry: 'GB',
   },
   areaServed: { '@type': 'Country', name: 'Uganda' },
-  knowsAbout: ['Education', 'Child welfare', 'Poverty relief', 'Uganda'],
+  knowsAbout: ['Education', 'Child welfare', 'Child sponsorship', 'Poverty relief', 'Special needs education', 'Uganda'],
 };
+
+// Breadcrumbs: from the address unless the page gives its own.
+const LABELS: Record<string, string> = {
+  about: 'About', projects: 'Projects', news: 'News & Events', donate: 'Donate', faq: 'FAQ',
+  trustees: 'Trustees', representatives: 'Representatives', 'contact-us': 'Contact', privacy: 'Privacy',
+  fundraising: 'Fundraising', 'the-history': 'Our History', safeguarding: 'Safeguarding',
+};
+const segs = Astro.url.pathname.split('/').filter(Boolean);
+const trail = crumbs ?? (segs.length === 0 ? [] : [
+  { name: 'Home', href: '/' },
+  ...segs.map((seg, i) => ({
+    name: i === segs.length - 1 && title ? title : LABELS[seg] ?? seg.replace(/-/g, ' '),
+    href: '/' + segs.slice(0, i + 1).join('/') + '/',
+  })),
+]);
+const breadcrumbSchema = trail.length > 1 ? {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: trail.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: new URL(c.href, siteUrl).href })),
+} : null;
+const pageSchemas = [breadcrumbSchema, ...(Array.isArray(schema) ? schema : schema ? [schema] : [])].filter(Boolean);
 ---
 
 <!doctype html>
@@ -93,6 +133,8 @@ const orgSchema = {
     />
 
     <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+    {pageSchemas.map((sch) => <script type="application/ld+json" set:html={JSON.stringify(sch)} />)}
+    <link rel="alternate" type="text/plain" title="R.E.A.CH facts for AI assistants" href="/llms.txt" />
   </head>
   <body class="flex min-h-screen flex-col">
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:shadow">Skip to content</a>
