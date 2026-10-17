@@ -40,6 +40,7 @@ const orgSchema = {
   '@id': orgId,
   name: site.fullName,
   alternateName: 'R.E.A.CH',
+  legalName: 'Bury African Outreach',
   url: siteUrl.href,
   logo: new URL(site.logo, siteUrl).href,
   image: ogImage,
@@ -50,7 +51,8 @@ const orgSchema = {
   foundingDate: '1992',
   sameAs: [
     site.facebook,
-    `https://register-of-charities.charitycommission.gov.uk/charity-search/-/charity-details/${site.charityNumber}`,
+    // The register's address uses its own organisation ID (3995831), not the charity number.
+    'https://register-of-charities.charitycommission.gov.uk/charity-search/-/charity-details/3995831',
   ],
   potentialAction: {
     '@type': 'DonateAction',
