@@ -28,6 +28,7 @@ const eventSchema = startDate ? {
   },
   organizer: { '@id': new URL('/#organization', siteUrl).href },
   url: new URL(`/news/${post.slug}/`, siteUrl).href,
+  ...(post.ticketUrl ? { offers: { '@type': 'Offer', url: post.ticketUrl } } : {}),
 } : undefined;
 ---
 
@@ -61,7 +62,10 @@ const eventSchema = startDate ? {
       </div>
 
       <div class="mt-10 flex flex-wrap gap-3">
-        <a href="/donate" class="btn-primary">Donate</a>
+        {post.ticketUrl && (
+          <a href={post.ticketUrl} class="btn-primary" target="_blank" rel="noopener">Book tickets</a>
+        )}
+        <a href="/donate" class={post.ticketUrl ? 'btn-ghost' : 'btn-primary'}>Donate</a>
         <a href="/contact-us" class="btn-ghost">Host an event</a>
         <a href="/news" class="btn-ghost">All news</a>
       </div>
