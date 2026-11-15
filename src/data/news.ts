@@ -13,6 +13,16 @@ export interface NewsPost {
 // the event title, date and venue. Update the blurbs with full details as needed.
 export const news: NewsPost[] = [
   {
+    slug: 'home-alone-28th-november-2026-regent-cinema-marple',
+    title: 'Home Alone — Family Film Morning',
+    eventDate: '28 November 2026',
+    posted: '15 November 2026',
+    venue: 'Regent Cinema',
+    location: 'Marple',
+    blurb:
+      'A festive family screening of the Christmas classic Home Alone at the Regent Cinema in Marple, starting at 10am. Tickets are £8, with all proceeds in aid of R.E.A.CH, helping to educate and care for vulnerable children in Uganda.',
+  },
+  {
     slug: 'elf-the-movie-29th-november-2025-regent-cinema-marple',
     title: 'Elf the Movie — Family Film Night',
     eventDate: '29 November 2025',
