@@ -139,6 +139,17 @@ const switches = [
     if (calmQuery && calmQuery.addEventListener) calmQuery.addEventListener('change', apply);
     if (darkQuery && darkQuery.addEventListener) darkQuery.addEventListener('change', function () { if (prefs.theme === 'auto') apply(); });
 
+    // Keep every page in step with the saved settings:
+    // - "pageshow" fires when the browser restores a page from its back/forward cache
+    //   (it comes back exactly as it was left, so a theme chosen since then is missing);
+    // - "storage" fires when the settings change in another tab or window.
+    function reload() {
+      try { prefs = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { prefs = {}; }
+      sync(); apply();
+    }
+    window.addEventListener('pageshow', function (e) { if (e.persisted) reload(); });
+    window.addEventListener('storage', function (e) { if (e.key === KEY || e.key === null) reload(); });
+
     sync(); apply();
   })();
 </script>
