@@ -10,9 +10,17 @@
     @apply bg-sand-50 text-ink-800 antialiased;
     font-feature-settings: 'cv05', 'ss01';
   }
+  ::selection {
+    @apply bg-accent-200 text-ink-900;
+  }
   h1, h2, h3, h4 {
     @apply font-display text-ink-900;
     text-wrap: balance;
+    font-optical-sizing: auto;
+    letter-spacing: -0.012em;
+  }
+  h1 {
+    letter-spacing: -0.022em;
   }
   p {
     text-wrap: pretty;
@@ -50,19 +58,21 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-semibold tracking-wide transition-all duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-[0.9375rem] font-semibold transition-colors duration-200 ease-out active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-sand-50;
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-semibold tracking-wide transition-all duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 bg-gradient-to-r from-accent-500 to-accent-600 text-white shadow-sm shadow-accent-600/20 hover:from-accent-600 hover:to-accent-700;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-[0.9375rem] font-semibold transition-colors duration-200 ease-out active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-sand-50 bg-accent-600 text-white shadow-soft hover:bg-accent-700;
   }
+  /* Was a gradient text effect; now a single deep brand colour, which reads
+     cleaner and sharper. Class name kept so existing pages don't need editing. */
   .text-gradient-warm {
-    @apply bg-gradient-to-r from-accent-500 via-accent-600 to-accent-700 bg-clip-text text-transparent;
+    @apply text-accent-700;
   }
   .rule-warm {
-    @apply h-1 w-16 rounded-full bg-gradient-to-r from-gold-400 via-accent-500 to-accent-700;
+    @apply h-0.5 w-12 bg-accent-600;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-semibold tracking-wide transition-all duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 border border-sand-300 bg-white/70 text-ink-800 hover:border-accent-300 hover:text-accent-700;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-[0.9375rem] font-semibold transition-colors duration-200 ease-out active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-sand-50 border border-sand-300 bg-white text-ink-800 hover:border-ink-800;
   }
   .container-reach {
     @apply mx-auto w-full max-w-content px-5 sm:px-8;
@@ -72,7 +82,7 @@
   }
   /* Gentle lift for interactive cards */
   .hover-lift {
-    @apply transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-lg hover:shadow-ink-900/5;
+    @apply transition-shadow duration-200 ease-out hover:shadow-soft;
   }
 }
 

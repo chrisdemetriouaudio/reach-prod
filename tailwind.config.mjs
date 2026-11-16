@@ -34,14 +34,22 @@ export default {
           300: '#d6c8b5',
         },
         ink: {
+          // 500/600 are used across the pages for secondary text.
+          500: '#6b665f',
+          600: '#524e48',
           700: '#3a3733',
           800: '#2a2825',
           900: '#1c1b19',
         },
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['"Fraunces"', 'Georgia', 'serif'],
+        sans: ['"Inter Variable"', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['"Fraunces Variable"', '"Fraunces"', 'Georgia', 'serif'],
+      },
+      boxShadow: {
+        // Warm-tinted, layered shadows (instead of flat grey) for cards and photos.
+        soft: '0 1px 2px rgba(111, 24, 10, 0.04), 0 12px 32px -16px rgba(111, 24, 10, 0.18)',
+        lift: '0 2px 4px rgba(111, 24, 10, 0.05), 0 24px 48px -20px rgba(111, 24, 10, 0.28)',
       },
       maxWidth: {
         content: '72rem',
