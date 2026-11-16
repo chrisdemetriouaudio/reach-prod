@@ -26,7 +26,11 @@ const endpoint = site.contactEndpoint;
             </span>
             <div>
               <dt class="text-sm font-semibold uppercase tracking-wider text-ink-500">Email</dt>
-              <dd class="mt-1"><a href={`mailto:${site.email}`} class="text-accent-700 hover:text-accent-800">{site.email}</a></dd>
+              <dd class="mt-1">
+                <a href={`mailto:${site.email}`} class="text-accent-700 hover:text-accent-800">{site.email}</a>
+                <button type="button" class="copy-btn" data-copy={site.email} hidden>Copy</button>
+                <span id="copy-status" class="sr-only" role="status" aria-live="polite"></span>
+              </dd>
             </div>
           </div>
           <div class="flex items-start gap-4">

@@ -3,9 +3,12 @@
 import '@fontsource-variable/fraunces/opsz.css';
 import '@fontsource-variable/inter/wght.css';
 import '../styles/global.css';
+import '../styles/display.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import CookieConsent from '../components/CookieConsent.astro';
+import DisplaySettings from '../components/DisplaySettings.astro';
+import Motion from '../components/Motion.astro';
 import { site } from '../data/site';
 
 interface Props {
@@ -109,6 +112,10 @@ const pageSchemas = [breadcrumbSchema, ...(Array.isArray(schema) ? schema : sche
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    <!-- Display settings (DisplaySettings.astro), applied before the page paints so there's no flash -->
+    <script is:inline>
+      (function(){var r=document.documentElement,p={};try{p=JSON.parse(localStorage.getItem("reach-display")||"{}")||{};}catch(e){}try{["text","font","spacing","contrast","motion"].forEach(function(k){var v=p[k];if(typeof v==="string"&&/^[a-z]+$/.test(v)&&v!=="normal"&&v!=="default")r.setAttribute("data-"+k,v);});if(p.motion!=="reduced"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)r.classList.add("motion");}catch(e){}})();
+    </script>
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
     <link rel="canonical" href={canonical} />
 
@@ -143,5 +150,7 @@ const pageSchemas = [breadcrumbSchema, ...(Array.isArray(schema) ? schema : sche
     </main>
     <Footer />
     <CookieConsent />
+    <DisplaySettings />
+    <Motion />
   </body>
 </html>

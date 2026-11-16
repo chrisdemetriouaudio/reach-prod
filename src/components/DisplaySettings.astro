@@ -1,0 +1,120 @@
+---
+// Display settings: text size, dyslexia-friendly font, wider spacing, high contrast,
+// reduce motion and a reading mask. Ported from chrisdemetriou.com.
+// Saved on the visitor's device only (localStorage "reach-display"; listed on /privacy).
+// BaseLayout's <head> applies the saved settings before the page paints, so there's no
+// flash; this component adds the panel and wires up the button in the Header.
+const sizes = [
+  { value: 'normal', label: 'Normal', cls: '' },
+  { value: 'large', label: 'Large', cls: 'step-2' },
+  { value: 'xlarge', label: 'Larger', cls: 'step-3' },
+];
+const switches = [
+  { name: 'font', value: 'dyslexic', title: 'Dyslexia-friendly font', hint: 'OpenDyslexic: heavier letter bottoms help stop letters flipping' },
+  { name: 'spacing', value: 'wide', title: 'Wider spacing', hint: 'More space between letters, words and lines' },
+  { name: 'contrast', value: 'high', title: 'High contrast', hint: 'Strong colours and outlines' },
+  { name: 'motion', value: 'reduced', title: 'Reduce motion', hint: 'Turns off animations and movement' },
+  { name: 'mask', value: 'on', title: 'Reading mask', hint: 'Dims the page except a strip that follows your finger or mouse' },
+];
+---
+<div class="display-panel" id="display-panel" role="dialog" aria-modal="false" aria-labelledby="display-heading" hidden>
+  <div class="display-head">
+    <h2 id="display-heading" tabindex="-1">Display settings</h2>
+    <button type="button" class="display-close">Close</button>
+  </div>
+  <fieldset>
+    <legend>Text size</legend>
+    <div class="segmented">
+      {sizes.map((s) => (
+        <Fragment>
+          <input type="radio" name="text" id={`display-text-${s.value}`} value={s.value} />
+          <label for={`display-text-${s.value}`} class={s.cls}>{s.label}</label>
+        </Fragment>
+      ))}
+    </div>
+  </fieldset>
+  <ul class="switches">
+    {switches.map((s) => (
+      <li>
+        <label class="switch" for={`display-${s.name}`}>
+          <span>{s.title}<small>{s.hint}</small></span>
+          <input type="checkbox" role="switch" name={s.name} id={`display-${s.name}`} value={s.value} />
+        </label>
+      </li>
+    ))}
+  </ul>
+  <div class="display-foot">
+    <p>Saved on this device only.</p>
+    <button type="button" class="display-reset">Reset all</button>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    var KEY = 'reach-display';
+    var DEFAULTS = { text: 'normal', font: 'default', spacing: 'normal', contrast: 'normal', motion: 'normal', mask: 'off' };
+    var root = document.documentElement;
+    var toggle = document.querySelector('.display-toggle');
+    var panel = document.getElementById('display-panel');
+    if (!toggle || !panel) return;
+
+    var prefs = {};
+    try { prefs = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { prefs = {}; }
+    function save() { try { localStorage.setItem(KEY, JSON.stringify(prefs)); } catch (e) {} }
+    var calmQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+
+    // reading mask: two dimmed strips that follow the pointer or finger
+    var top = null, bottom = null, maskOn = false;
+    function strip(cls) { var d = document.createElement('div'); d.className = 'reading-mask ' + cls; d.setAttribute('aria-hidden', 'true'); document.body.appendChild(d); return d; }
+    function place(y) { var h = Math.max(44, Math.round(window.innerHeight * 0.07)); top.style.height = Math.max(0, y - h) + 'px'; bottom.style.height = Math.max(0, window.innerHeight - y - h) + 'px'; }
+    function move(e) { var p = e.touches && e.touches.length ? e.touches[0] : e; if (typeof p.clientY === 'number') place(p.clientY); }
+    function setMask(on) {
+      if (on === maskOn) return;
+      maskOn = on;
+      if (on) {
+        if (!top) { top = strip('reading-mask--top'); bottom = strip('reading-mask--bottom'); }
+        top.hidden = bottom.hidden = false;
+        place(window.innerHeight / 2);
+        window.addEventListener('pointermove', move, { passive: true });
+        window.addEventListener('touchstart', move, { passive: true });
+        window.addEventListener('touchmove', move, { passive: true });
+      } else if (top) {
+        top.hidden = bottom.hidden = true;
+        window.removeEventListener('pointermove', move);
+        window.removeEventListener('touchstart', move);
+        window.removeEventListener('touchmove', move);
+      }
+    }
+
+    function apply() {
+      ['text', 'font', 'spacing', 'contrast', 'motion'].forEach(function (k) {
+        var v = prefs[k];
+        if (v && v !== DEFAULTS[k]) root.setAttribute('data-' + k, v); else root.removeAttribute('data-' + k);
+      });
+      // animations run unless the visitor or their device asked for less motion
+      root.classList.toggle('motion', prefs.motion !== 'reduced' && !(calmQuery && calmQuery.matches));
+      setMask(prefs.mask === 'on');
+    }
+    function sync() {
+      panel.querySelectorAll('input[type=radio]').forEach(function (i) { i.checked = (prefs[i.name] || DEFAULTS[i.name]) === i.value; });
+      panel.querySelectorAll('input[type=checkbox]').forEach(function (i) { i.checked = prefs[i.name] === i.value; });
+    }
+    function open() { panel.hidden = false; toggle.setAttribute('aria-expanded', 'true'); panel.querySelector('h2').focus(); }
+    function close(back) { panel.hidden = true; toggle.setAttribute('aria-expanded', 'false'); if (back) toggle.focus(); }
+
+    panel.addEventListener('change', function (e) {
+      var i = e.target;
+      var v = i.type === 'checkbox' && !i.checked ? DEFAULTS[i.name] : i.value;
+      if (v === DEFAULTS[i.name]) delete prefs[i.name]; else prefs[i.name] = v; // only changes are saved
+      apply(); save();
+    });
+    toggle.addEventListener('click', function () { if (panel.hidden) open(); else close(false); });
+    panel.querySelector('.display-close').addEventListener('click', function () { close(true); });
+    panel.querySelector('.display-reset').addEventListener('click', function () { prefs = {}; save(); apply(); sync(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) close(true); });
+    document.addEventListener('click', function (e) { if (!panel.hidden && !panel.contains(e.target) && !toggle.contains(e.target)) close(false); });
+    if (calmQuery && calmQuery.addEventListener) calmQuery.addEventListener('change', apply);
+
+    sync(); apply();
+  })();
+</script>

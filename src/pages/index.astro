@@ -127,7 +127,11 @@ const sponsorship = [
       {stats.map((s) => (
         <div class="flex flex-col-reverse py-8 text-center sm:px-8 sm:py-10">
           <dt class="mt-2 text-sm text-ink-600">{s.label}</dt>
-          <dd class="font-display text-4xl font-medium tracking-tight text-ink-900 sm:text-5xl">{s.value}</dd>
+          <dd class="font-display text-4xl font-medium tracking-tight text-ink-900 sm:text-5xl">
+            {/^\d+%$/.test(s.value)
+              ? <span class="num-up" data-to={parseInt(s.value, 10)} data-suffix="%">{s.value}</span>
+              : s.value}
+          </dd>
         </div>
       ))}
     </dl>

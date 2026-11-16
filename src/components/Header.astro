@@ -20,6 +20,7 @@ const isActive = (href: string) =>
           <li class="group relative">
             <a
               href={item.href}
+              aria-current={isActive(item.href) ? 'page' : undefined}
               class:list={[
                 'inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-sm font-medium transition',
                 isActive(item.href) ? 'text-accent-700' : 'text-ink-700 hover:text-accent-700',
@@ -48,14 +49,19 @@ const isActive = (href: string) =>
       </ul>
     </nav>
 
-    <div class="hidden items-center gap-3 lg:flex">
-      <a href="/donate" class="btn-primary !px-5 !py-2">Donate</a>
-    </div>
+    <div class="flex items-center gap-2">
+      <!-- Display settings (text size, dyslexia font, contrast…): see DisplaySettings.astro -->
+      <button type="button" class="display-toggle" aria-expanded="false" aria-controls="display-panel" aria-label="Display settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 18L8.2 5h1.6L15 18M5 14h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 11.5c.6-.9 1.5-1.4 2.6-1.4 1.6 0 2.4 1 2.4 2.5V18m0-3.5c-.8-.4-1.6-.5-2.5-.5-1.5 0-2.5.8-2.5 2s.9 2 2.2 2c1.3 0 2.3-.8 2.8-1.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Display</span>
+      </button>
+      <a href="/donate" class="btn-primary hidden !px-5 !py-2 lg:inline-flex">Donate</a>
 
-    <!-- Mobile toggle -->
-    <button id="nav-toggle" class="lg:hidden grid h-10 w-10 place-items-center rounded-lg text-ink-800 hover:bg-sand-100" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
-      <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
-    </button>
+      <!-- Mobile toggle -->
+      <button id="nav-toggle" class="lg:hidden grid h-10 w-10 place-items-center rounded-lg text-ink-800 hover:bg-sand-100" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+      </button>
+    </div>
   </div>
 
   <!-- Mobile nav -->
