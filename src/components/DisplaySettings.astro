@@ -1,9 +1,14 @@
 ---
-// Display settings: text size, dyslexia-friendly font, wider spacing, high contrast,
+// Display settings: theme (light / dark / match device), text size, dyslexia-friendly font, wider spacing, high contrast,
 // reduce motion and a reading mask. Ported from chrisdemetriou.com.
 // Saved on the visitor's device only (localStorage "reach-display"; listed on /privacy).
 // BaseLayout's <head> applies the saved settings before the page paints, so there's no
 // flash; this component adds the panel and wires up the button in the Header.
+const themes = [
+  { value: 'light', label: 'Light' },
+  { value: 'dark', label: 'Dark' },
+  { value: 'auto', label: 'Match device' },
+];
 const sizes = [
   { value: 'normal', label: 'Normal', cls: '' },
   { value: 'large', label: 'Large', cls: 'step-2' },
@@ -22,6 +27,17 @@ const switches = [
     <h2 id="display-heading" tabindex="-1">Display settings</h2>
     <button type="button" class="display-close">Close</button>
   </div>
+  <fieldset>
+    <legend>Theme</legend>
+    <div class="segmented">
+      {themes.map((t) => (
+        <Fragment>
+          <input type="radio" name="theme" id={`display-theme-${t.value}`} value={t.value} />
+          <label for={`display-theme-${t.value}`}>{t.label}</label>
+        </Fragment>
+      ))}
+    </div>
+  </fieldset>
   <fieldset>
     <legend>Text size</legend>
     <div class="segmented">
@@ -52,7 +68,7 @@ const switches = [
 <script is:inline>
   (function () {
     var KEY = 'reach-display';
-    var DEFAULTS = { text: 'normal', font: 'default', spacing: 'normal', contrast: 'normal', motion: 'normal', mask: 'off' };
+    var DEFAULTS = { theme: 'light', text: 'normal', font: 'default', spacing: 'normal', contrast: 'normal', motion: 'normal', mask: 'off' };
     var root = document.documentElement;
     var toggle = document.querySelector('.display-toggle');
     var panel = document.getElementById('display-panel');
@@ -62,6 +78,12 @@ const switches = [
     try { prefs = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { prefs = {}; }
     function save() { try { localStorage.setItem(KEY, JSON.stringify(prefs)); } catch (e) {} }
     var calmQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    var darkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+    function resolvedTheme() {
+      var t = prefs.theme || DEFAULTS.theme;
+      if (t === 'auto') return darkQuery && darkQuery.matches ? 'dark' : 'light';
+      return t;
+    }
 
     // reading mask: two dimmed strips that follow the pointer or finger
     var top = null, bottom = null, maskOn = false;
@@ -87,6 +109,7 @@ const switches = [
     }
 
     function apply() {
+      if (resolvedTheme() === 'dark') root.setAttribute('data-theme', 'dark'); else root.removeAttribute('data-theme');
       ['text', 'font', 'spacing', 'contrast', 'motion'].forEach(function (k) {
         var v = prefs[k];
         if (v && v !== DEFAULTS[k]) root.setAttribute('data-' + k, v); else root.removeAttribute('data-' + k);
@@ -114,6 +137,7 @@ const switches = [
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) close(true); });
     document.addEventListener('click', function (e) { if (!panel.hidden && !panel.contains(e.target) && !toggle.contains(e.target)) close(false); });
     if (calmQuery && calmQuery.addEventListener) calmQuery.addEventListener('change', apply);
+    if (darkQuery && darkQuery.addEventListener) darkQuery.addEventListener('change', function () { if (prefs.theme === 'auto') apply(); });
 
     sync(); apply();
   })();

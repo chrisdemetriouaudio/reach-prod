@@ -114,7 +114,7 @@ const pageSchemas = [breadcrumbSchema, ...(Array.isArray(schema) ? schema : sche
     <meta name="description" content={description} />
     <!-- Display settings (DisplaySettings.astro), applied before the page paints so there's no flash -->
     <script is:inline>
-      (function(){var r=document.documentElement,p={};try{p=JSON.parse(localStorage.getItem("reach-display")||"{}")||{};}catch(e){}try{["text","font","spacing","contrast","motion"].forEach(function(k){var v=p[k];if(typeof v==="string"&&/^[a-z]+$/.test(v)&&v!=="normal"&&v!=="default")r.setAttribute("data-"+k,v);});if(p.motion!=="reduced"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)r.classList.add("motion");}catch(e){}})();
+      (function(){var r=document.documentElement,p={};try{p=JSON.parse(localStorage.getItem("reach-display")||"{}")||{};}catch(e){}try{var t=p.theme==="auto"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):p.theme;if(t==="dark")r.setAttribute("data-theme","dark");["text","font","spacing","contrast","motion"].forEach(function(k){var v=p[k];if(typeof v==="string"&&/^[a-z]+$/.test(v)&&v!=="normal"&&v!=="default")r.setAttribute("data-"+k,v);});if(p.motion!=="reduced"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)r.classList.add("motion");}catch(e){}})();
     </script>
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
     <link rel="canonical" href={canonical} />

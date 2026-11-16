@@ -1,45 +1,48 @@
+const v = (name) => `rgb(var(--${name}) / <alpha-value>)`;
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,ts,tsx}'],
   theme: {
     extend: {
+      // Every colour is a CSS variable (set in src/styles/global.css) so the dark theme
+      // can swap the whole palette. Light values, for reference:
+      //   accent = logo burnt orange (#d86018) into deep red (#a81800); gold = logo yellow;
+      //   sand = warm neutrals; ink = text.
       colors: {
-        // Brand accent — drawn from the logo: burnt orange (#d86018) blending
-        // into deep red (#a81800). Used for buttons, links and highlights.
+        // "white" is the card/surface colour: white in light, warm charcoal in dark.
+        white: v('white'),
         accent: {
-          50: '#fdf4ec',
-          100: '#fbe3cd',
-          200: '#f5c39b',
-          300: '#ee9c61',
-          400: '#e77738',
-          500: '#d86018', // logo orange (dominant)
-          600: '#bd4a10',
-          700: '#a81800', // logo red
-          800: '#871808',
-          900: '#6f180a',
+          50: v('accent-50'),
+          100: v('accent-100'),
+          200: v('accent-200'),
+          300: v('accent-300'),
+          400: v('accent-400'),
+          500: v('accent-500'),
+          600: v('accent-600'),
+          700: v('accent-700'),
+          800: v('accent-800'),
+          900: v('accent-900'),
         },
-        // Golden yellow from the logo — for small, sparing highlights.
         gold: {
-          300: '#f7d566',
-          400: '#f3c93a',
-          500: '#f0c018', // logo gold
-          600: '#d4a40d',
-          700: '#a87d09',
+          300: v('gold-300'),
+          400: v('gold-400'),
+          500: v('gold-500'),
+          600: v('gold-600'),
+          700: v('gold-700'),
         },
-        // Warm neutral palette
         sand: {
-          50: '#faf8f5',
-          100: '#f3efe8',
-          200: '#e7ded2',
-          300: '#d6c8b5',
+          50: v('sand-50'),
+          100: v('sand-100'),
+          200: v('sand-200'),
+          300: v('sand-300'),
         },
         ink: {
-          // 500/600 are used across the pages for secondary text.
-          500: '#6b665f',
-          600: '#524e48',
-          700: '#3a3733',
-          800: '#2a2825',
-          900: '#1c1b19',
+          500: v('ink-500'),
+          600: v('ink-600'),
+          700: v('ink-700'),
+          800: v('ink-800'),
+          900: v('ink-900'),
         },
       },
       fontFamily: {
