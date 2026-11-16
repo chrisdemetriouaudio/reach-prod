@@ -21,3 +21,11 @@ pnpm-debug.log*
 
 # Wrangler local state (worker/)
 .wrangler/
+
+# Full-size originals kept on disk only (the site uses the smaller .jpg / .webp versions)
+public/images/banner-home.png
+public/images/banner-inner.png
+public/images/trustee-denise.png
+public/images/trustee-lydia.png
+# Old hand-made sitemap; the real one is generated on every build (sitemap-index.xml)
+public/sitemap.xml
