@@ -28,6 +28,7 @@ const eventSchema = startDate ? {
   },
   organizer: { '@id': new URL('/#organization', siteUrl).href },
   url: new URL(`/news/${post.slug}/`, siteUrl).href,
+  ...(post.image ? { image: new URL(post.image, siteUrl).href } : {}),
   ...(post.ticketUrl ? { offers: { '@type': 'Offer', url: post.ticketUrl } } : {}),
 } : undefined;
 ---
@@ -51,6 +52,15 @@ const eventSchema = startDate ? {
           <dd class="mt-1 font-medium text-ink-800">{post.location}</dd>
         </div>
       </dl>
+
+      {post.image && (
+        <img
+          src={post.image}
+          alt={post.imageAlt ?? `Poster for ${post.title}`}
+          width="1065" height="1352" loading="eager" decoding="async"
+          class="mx-auto mt-8 w-full max-w-md rounded-2xl border border-sand-200 shadow-sm"
+        />
+      )}
 
       <div class="prose-reach mt-8">
         <p>{post.blurb}</p>

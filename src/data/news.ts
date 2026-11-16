@@ -8,6 +8,9 @@ export interface NewsPost {
   blurb: string;
   // Optional link to buy tickets (shown as a button on the event page).
   ticketUrl?: string;
+  // Optional event poster (path under /public), shown on the event page.
+  image?: string;
+  imageAlt?: string;
 }
 
 // Fundraising events from the R.E.A.CH calendar. The original post bodies could
@@ -24,6 +27,8 @@ export const news: NewsPost[] = [
     blurb:
       'A festive family screening of the Christmas classic Home Alone at the Regent Cinema in Marple, starting at 10am (doors open 9:30am). Tickets are £8, with all proceeds in aid of R.E.A.CH, helping to educate and care for vulnerable children in Uganda.',
     ticketUrl: 'https://www.eventbrite.com/e/home-alone-marple-cinema-tickets-2002920367737',
+    image: '/images/home-alone-marple-cinema-2026.jpg',
+    imageAlt: 'Event poster: Home Alone at Marple Cinema, 28th November at 10am. Tickets £8. All proceeds in aid of REACH.',
   },
   {
     slug: 'elf-the-movie-29th-november-2025-regent-cinema-marple',
