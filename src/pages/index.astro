@@ -1,6 +1,20 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { projects } from '../data/projects';
+import { news } from '../data/news';
+
+// "Next event" banner. Events dated before the build day are left out here; the
+// small script below the banner then hides an event once its day has passed, so
+// nothing stale shows even if the site isn't rebuilt in between.
+const toIso = (d: string) => {
+  const parsed = new Date(`${d} 12:00 UTC`);
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed.toISOString().slice(0, 10);
+};
+const buildDay = new Date().toISOString().slice(0, 10);
+const upcoming = news
+  .map((n) => ({ ...n, iso: toIso(n.eventDate) }))
+  .filter((n) => n.iso !== undefined && n.iso >= buildDay)
+  .sort((a, b) => a.iso!.localeCompare(b.iso!));
 
 const featured = projects.filter((p) => p.featured).slice(0, 3);
 
@@ -56,6 +70,62 @@ const sponsorship = [
       </div>
     </div>
   </section>
+
+  <!-- Next event (hidden until the script confirms the event hasn't passed) -->
+  {upcoming.length > 0 && (
+    <section id="next-event" class="border-t border-sand-200 bg-accent-50" hidden>
+      <div class="container-reach py-8">
+        {upcoming.map((e) => (
+          <div data-event-date={e.iso} hidden>
+            <div class="flex flex-col items-center gap-6 sm:flex-row">
+              {e.image && (
+                <a href={`/news/${e.slug}/`} class="shrink-0">
+                  <img
+                    src={e.image}
+                    alt={e.imageAlt ?? `Poster for ${e.title}`}
+                    width="1065" height="1352" loading="lazy" decoding="async"
+                    class="h-40 w-auto rounded-xl border border-sand-200 shadow-sm"
+                  />
+                </a>
+              )}
+              <div class="flex-1 text-center sm:text-left">
+                <p class="text-sm font-semibold uppercase tracking-widest text-accent-700">Next event · {e.eventDate}</p>
+                <h2 class="mt-1 text-2xl font-semibold sm:text-3xl">{e.title}</h2>
+                <p class="mt-1 text-ink-600">{e.venue}, {e.location}</p>
+              </div>
+              <div class="flex flex-wrap justify-center gap-3">
+                {e.ticketUrl && (
+                  <a href={e.ticketUrl} class="btn-primary" target="_blank" rel="noopener">Book tickets</a>
+                )}
+                <a href={`/news/${e.slug}/`} class="btn-ghost">Event details</a>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+  <script is:inline>
+    (function () {
+      var section = document.getElementById('next-event');
+      if (!section) return;
+      var today;
+      try {
+        // en-CA formats as YYYY-MM-DD; UK time so the banner lasts through the event day.
+        today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+      } catch (err) {
+        today = new Date().toISOString().slice(0, 10);
+      }
+      var items = section.querySelectorAll('[data-event-date]');
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].getAttribute('data-event-date') >= today) {
+          items[i].hidden = false;
+          section.hidden = false;
+          break;
+        }
+      }
+    })();
+  </script>
 
   <!-- Stats -->
   <section class="border-y border-sand-200 bg-white">
