@@ -1,133 +1,62 @@
-# R.E.A.CH — Astro site
+# R.E.A.CH charity website
 
-A clean, mobile-first rebuild of the R.E.A.CH (Reaching East Africa's Children) website,
-migrated from a WordPress export to [Astro](https://astro.build) + Tailwind CSS and ready to
-deploy to GitHub Pages on the custom domain **reach-children-uganda.org.uk**.
+The website for R.E.A.CH (Reaching East Africa's Children), a UK charity that supports children's education in Uganda.
 
-All WordPress, PHP, Elementor and Hestia theme code has been stripped. The content (text, page
-structure, contact details, trustee bios, project descriptions, FAQs) was extracted from the
-static export and rewritten as semantic Astro components.
+**Live:** https://reach-children-uganda.org.uk
 
-## Quick start
+## The problem
+
+The charity had lost its WordPress website. Donors and supporters had nowhere to go.
+
+## What I built
+
+- **Recovered the content.** Page text, trustee details, projects and FAQs came back from web archives and an old backup.
+- **Rebuilt it as a static site.** Astro and Tailwind CSS, with no WordPress, PHP or plugins left to patch.
+- **A contact form that reaches the charity.** A small Cloudflare Worker checks each message is from a person, then e-mails the charity's inbox.
+- **Display settings.** Dark by default, with text size, a dyslexia-friendly font, contrast and calm motion.
+- **Ready to be found.** Structured data for the charity, its events and FAQs, share cards, a sitemap and `llms.txt`.
+- **Privacy first.** No tracking cookies unless a visitor agrees.
+
+## The result
+
+The charity is back online, on its own domain, with no hosting bill.
+
+## How it works
+
+| Where | What runs there |
+|---|---|
+| **GitHub Actions** | Builds and deploys the site on every push to `main` |
+| **GitHub Pages** | Serves the static site on the charity's domain |
+| **Cloudflare Worker** | Receives the contact form, runs the Turnstile check and sends the e-mail |
+
+## Run it
 
 ```bash
-cd astro-site
-npm install          # installs Astro, Tailwind, sitemap
-npm run dev          # local preview at http://localhost:4321
+npm install
+npm run dev       # local preview at http://localhost:4321
+npm run build     # static files in ./dist
+npm run preview   # serve the built site
 ```
 
-Then build a production copy:
+## Where things are
 
-```bash
-npm run build        # outputs static files to ./dist
-npm run preview      # serve the built site locally
-```
+| Folder | What |
+|---|---|
+| `src/pages/` | One file per page |
+| `src/components/` | Header, footer, display settings, cookie consent |
+| `src/data/` | Content in plain data files: site details, projects, news, FAQs |
+| `worker/` | The contact form Worker |
+| `public/` | Images, fonts and the domain file |
+| `docs/` | Set-up guides for the contact form and for launch |
 
-## Add the images (one-time)
+## Change the content
 
-The page templates reference photos by clean filenames (e.g. `/images/trustee-lydia.png`). A helper
-script copies them out of the WordPress export and renames them:
+Content lives in `src/data/`, so text can change without touching the page layout.
 
-```bash
-bash scripts/copy-images.sh
-# or point it at the uploads folder explicitly:
-bash scripts/copy-images.sh "/Volumes/01 PROJECTS/Claude/reach-children-recovery/static-site/wp-content/uploads"
-```
+- `site.ts`: name, contact details and menu.
+- `projects.ts`: each project's title, summary and text.
+- `news.ts`: fundraising events.
 
-Any image that can't be found is skipped — the site falls back to a branded placeholder so the
-layout never breaks. You can drop replacement images straight into `public/images/` using the same
-names. After copying, run `npm run build` again.
+## How this was built
 
-## Deploy to GitHub Pages
-
-1. Create / use the repo `chrisdemetriouaudio/reach-prod`.
-2. From this `astro-site` folder:
-
-   ```bash
-   git init
-   git add -A
-   git commit -m "Migrate WordPress site to Astro"
-   git branch -M main
-   git remote add origin https://github.com/chrisdemetriouaudio/reach-prod.git
-   git push -u origin main
-   ```
-
-3. In the repo on GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-4. The workflow in `.github/workflows/deploy.yml` builds and deploys on every push to `main`.
-5. **Custom domain:** `public/CNAME` already contains `reach-children-uganda.org.uk`. Point the
-   domain's DNS at GitHub Pages (a `CNAME` record to `chrisdemetriouaudio.github.io`, or the four
-   `A` records for apex domains), then set the custom domain under Settings → Pages.
-
-> Serving from a `github.io/reach-prod` path instead? Set `base: '/reach-prod'` in
-> `astro.config.mjs`, delete `public/CNAME`, and rebuild.
-
-## Project structure
-
-```
-astro-site/
-├── public/
-│   ├── images/            # site images (+ placeholder.svg fallback)
-│   ├── CNAME              # custom domain for GitHub Pages
-│   ├── favicon.svg
-│   └── robots.txt
-├── scripts/
-│   └── copy-images.sh     # WordPress uploads -> public/images
-├── src/
-│   ├── components/        # Header, Footer, PageHeader, Img
-│   ├── data/              # site.ts, projects.ts, news.ts (content)
-│   ├── layouts/           # BaseLayout.astro
-│   ├── pages/             # routes mirroring the original slugs
-│   └── styles/            # global.css (Tailwind + theme)
-├── astro.config.mjs
-├── tailwind.config.mjs
-└── package.json
-```
-
-## Routes
-
-| URL | Page |
-| --- | --- |
-| `/` | Home |
-| `/about` | How R.E.A.CH works |
-| `/about/the-history` | The History |
-| `/about/safeguarding` | Safeguarding Statement |
-| `/trustees` | Our Trustees |
-| `/representatives` | Our Trusted Representatives |
-| `/faq` | Frequently Asked Questions |
-| `/donate` | Donate |
-| `/contact-us` | Contact Us |
-| `/projects` | Projects index |
-| `/projects/<slug>` | 9 individual project pages |
-| `/news` | News & Events |
-| `/news/<slug>` | 4 event pages |
-
-## Editing content
-
-Content lives in plain TypeScript data files so it's easy to update without touching markup:
-
-- **`src/data/site.ts`** — name, tagline, email, phone, address, navigation.
-- **`src/data/projects.ts`** — every project's title, summary and body text.
-- **`src/data/news.ts`** — fundraising events.
-
-## Notes from the migration
-
-- The **News**, **Representatives** and three project pages (Good Shepherd Special Needs School,
-  The Joy of Learning, Link and Learn 2015) were captured as `503 Service Unavailable` errors in the
-  export, so their original body text could not be recovered. These pages have been rebuilt from
-  facts found elsewhere on the site (event titles/dates, the named Ugandan advisors, etc.) and are
-  marked where detail is missing. Drop in the real copy via the data files when you have it.
-- The **contact form** sends real email via [Formspree](https://formspree.io) (GitHub Pages can't
-  run the old PHP Contact Form 7). To turn it on:
-  1. Sign up free at formspree.io, create a form, and set its destination email to
-     `reachchildrenuganda@outlook.com`.
-  2. Copy the form's endpoint (looks like `https://formspree.io/f/abcdwxyz`) into
-     `formspreeEndpoint` in `src/data/site.ts`.
-  3. **Spam protection:** a hidden honeypot field is always on. For a stronger "I'm not a robot"
-     check, create a Google reCAPTCHA **v2** at https://www.google.com/recaptcha/admin and paste the
-     **site key** into `recaptchaSiteKey` in `src/data/site.ts`. Leave it blank to rely on the
-     honeypot plus Formspree's built-in spam filtering. (Validating the reCAPTCHA on the server side
-     requires Formspree's paid plan; the widget still blocks basic bots on the free plan.)
-  Until the endpoint is set, the form shows a friendly note asking visitors to email directly.
-- **Security:** the original WordPress export contained an injected malicious script
-  (`cdn.statisticline.com/scripts/sway.js`) on several pages — a sign the old site was compromised.
-  None of it has been carried over. Keep it out of any future content edits.
+I design the solution and direct AI coding tools to build it. I test it, and nothing ships until I sign it off.
